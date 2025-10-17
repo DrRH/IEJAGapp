@@ -1,0 +1,16 @@
+{
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build"
+  },
+  "devDependencies": {
+    "@tabler/core": "^1.4.0",
+    "@tabler/icons-webfont": "^3.35.0",
+    "autoprefixer": "^10.4.21",
+    "laravel-vite-plugin": "^1.0.4",
+    "postcss": "^8.5.6",
+    "vite": "^6.3.6"
+  }
+}

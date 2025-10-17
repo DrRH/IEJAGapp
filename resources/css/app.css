@@ -1,0 +1,17 @@
+/* resources/css/app.css */
+
+/* Tabler Core */
+@import "@tabler/core/dist/css/tabler.min.css";
+@import "@tabler/core/dist/css/tabler-vendors.min.css";
+@import "@tabler/icons-webfont/dist/tabler-icons.min.css";
+
+/* Overrides opcionales */
+:root {
+  /* Cambia el color primario si quieres */
+  --tblr-primary: #0d6efd;
+}
+
+/* Ejemplo: espacio para tu propio CSS
+body {
+  tus estilos aquí
+}*/
