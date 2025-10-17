@@ -33,7 +33,9 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/administracion/configuracion', [SettingsController::class, 'update'])->name('settings.update');
 
     // Gestión de usuarios
-    Route::resource('administracion/usuarios', UsersController::class)->names([
+    Route::resource('administracion/usuarios', UsersController::class)->parameters([
+        'usuarios' => 'user'
+    ])->names([
         'index' => 'administracion.usuarios.index',
         'create' => 'administracion.usuarios.create',
         'store' => 'administracion.usuarios.store',
