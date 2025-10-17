@@ -1,66 +1,359 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🏫 Sistema de Gestión I.E. José Antonio Galán
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Sistema integral de gestión institucional desarrollado con Laravel 11 para la Institución Educativa José Antonio Galán de Medellín, Colombia.
 
-## About Laravel
+![Laravel](https://img.shields.io/badge/Laravel-11.x-FF2D20?style=flat-square&logo=laravel)
+![PHP](https://img.shields.io/badge/PHP-8.3+-777BB4?style=flat-square&logo=php)
+![MySQL](https://img.shields.io/badge/MySQL-8.0+-4479A1?style=flat-square&logo=mysql)
+![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 📋 Descripción
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Sistema web moderno y responsive para la gestión administrativa, académica y de convivencia escolar. Diseñado específicamente para instituciones educativas colombianas, integrando las mejores prácticas de desarrollo y seguridad.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## ✨ Características Principales
 
-## Learning Laravel
+### 🔐 Autenticación y Seguridad
+- Autenticación mediante Google OAuth 2.0
+- Sistema de roles y permisos con Spatie Permission
+- Gestión granular de accesos
+- Protección CSRF y seguridad Laravel nativa
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### 👥 Gestión de Usuarios
+- CRUD completo de usuarios
+- Asignación múltiple de roles
+- Perfiles de usuario personalizables
+- Integración con cuentas de Google
+- Avatar automático o desde Google
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### 📊 Módulos Implementados
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+#### ✅ Administración
+- **Gestión de Usuarios**: Crear, editar, eliminar y asignar roles
+- **Configuración Institucional**: Datos de la institución, personalización
+- **Logs y Auditoría**: Seguimiento de actividades (en desarrollo)
 
-## Laravel Sponsors
+#### 🎓 Académico (Estructura preparada)
+- Gestión de estudiantes
+- Registro de calificaciones
+- Control de asistencia
+- Boletines y reportes académicos
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+#### 🤝 Convivencia (Estructura preparada)
+- Observador del estudiante
+- Gestión de casos disciplinarios
+- Atención psicosocial
+- Comité de convivencia
 
-### Premium Partners
+#### 📝 Actas y Comités (Estructura preparada)
+- Actas generales
+- Comité académico
+- Comité de convivencia
+- Gestión documental
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+#### 📈 Reportes e Indicadores (Estructura preparada)
+- Reportes académicos
+- Reportes de convivencia
+- Tableros de indicadores
+- Exportación de datos
 
-## Contributing
+#### 🔗 Integraciones Google (Estructura preparada)
+- Google Drive
+- Google Sheets
+- Google Calendar
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### 🎨 Interfaz de Usuario
+- Diseño moderno con [Tabler UI](https://tabler.io/)
+- Responsive y mobile-first
+- Iconos Tabler Icons
+- Tema claro/oscuro (preparado)
+- Notificaciones flash
+- Modales de confirmación
 
-## Code of Conduct
+## 🛠️ Tecnologías Utilizadas
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### Backend
+- **Laravel 11.x** - Framework PHP
+- **PHP 8.3+** - Lenguaje de programación
+- **MySQL/MariaDB** - Base de datos
+- **Spatie Permission** - Gestión de roles y permisos
 
-## Security Vulnerabilities
+### Frontend
+- **Tabler UI** - Framework CSS
+- **Vite** - Build tool
+- **Tailwind CSS** - Utilidades CSS
+- **Alpine.js** (integrable) - JavaScript reactivo
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### Autenticación
+- **Laravel Socialite** - OAuth con Google
+- **Google OAuth 2.0** - Proveedor de autenticación
 
-## License
+## 📦 Requisitos del Sistema
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+- PHP >= 8.3
+- Composer
+- Node.js >= 18.x y npm
+- MySQL >= 8.0 o MariaDB >= 10.6
+- Git
+- Servidor web (Apache/Nginx)
+
+## 🚀 Instalación
+
+### 1. Clonar el repositorio
+
+```bash
+git clone https://github.com/DrRH/IEJAGapp.git
+cd IEJAGapp
+```
+
+### 2. Instalar dependencias
+
+```bash
+# Dependencias de PHP
+composer install
+
+# Dependencias de Node.js
+npm install
+```
+
+### 3. Configurar variables de entorno
+
+```bash
+cp .env.example .env
+php artisan key:generate
+```
+
+Edita el archivo `.env` con tus configuraciones:
+
+```env
+APP_NAME="I.E. José Antonio Galán"
+APP_URL=https://tu-dominio.com
+
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=iejag_db
+DB_USERNAME=tu_usuario
+DB_PASSWORD=tu_contraseña
+
+# Google OAuth
+GOOGLE_CLIENT_ID=tu_client_id
+GOOGLE_CLIENT_SECRET=tu_client_secret
+GOOGLE_REDIRECT_URI=https://tu-dominio.com/auth/google/callback
+```
+
+### 4. Configurar base de datos
+
+```bash
+# Crear base de datos
+mysql -u root -p
+CREATE DATABASE iejag_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+exit;
+
+# Ejecutar migraciones
+php artisan migrate
+
+# (Opcional) Ejecutar seeders para datos de prueba
+php artisan db:seed
+```
+
+### 5. Compilar assets
+
+```bash
+# Desarrollo
+npm run dev
+
+# Producción
+npm run build
+```
+
+### 6. Configurar permisos
+
+```bash
+chmod -R 775 storage bootstrap/cache
+chown -R www-data:www-data storage bootstrap/cache
+```
+
+### 7. Iniciar servidor de desarrollo
+
+```bash
+php artisan serve
+```
+
+Visita: `http://localhost:8000`
+
+## 🔑 Google OAuth Setup
+
+1. Ve a [Google Cloud Console](https://console.cloud.google.com/)
+2. Crea un nuevo proyecto o selecciona uno existente
+3. Habilita "Google+ API"
+4. En "Credenciales", crea un OAuth 2.0 Client ID
+5. Agrega las URIs autorizadas:
+   - **JavaScript origins**: `https://tu-dominio.com`
+   - **Redirect URIs**: `https://tu-dominio.com/auth/google/callback`
+6. Copia el Client ID y Client Secret al `.env`
+
+## 👤 Roles Predefinidos
+
+El sistema incluye 4 roles básicos:
+
+| Rol | Descripción | Permisos |
+|-----|-------------|----------|
+| **Administrador** | Control total del sistema | Todos los permisos |
+| **Coordinador** | Gestión académica y disciplinaria | Gestión de estudiantes, reportes |
+| **Docente** | Gestión de calificaciones y asistencia | Calificaciones, observador |
+| **Secretaria** | Gestión administrativa | Matrículas, documentos |
+
+## 📁 Estructura del Proyecto
+
+```
+IEJAGapp/
+├── app/
+│   ├── Http/
+│   │   └── Controllers/
+│   │       ├── Auth/
+│   │       │   └── GoogleController.php
+│   │       ├── UsersController.php
+│   │       ├── SettingsController.php
+│   │       └── ProfileController.php
+│   ├── Models/
+│   │   ├── User.php
+│   │   └── Setting.php
+│   └── Services/
+│       └── GoogleService.php
+├── database/
+│   ├── migrations/
+│   └── seeders/
+├── resources/
+│   ├── css/
+│   ├── js/
+│   └── views/
+│       ├── administracion/
+│       │   └── usuarios/
+│       ├── auth/
+│       ├── layouts/
+│       └── settings/
+├── routes/
+│   └── web.php
+└── public/
+```
+
+## 🧪 Testing
+
+```bash
+# Ejecutar tests
+php artisan test
+
+# Con cobertura
+php artisan test --coverage
+```
+
+## 📝 Uso Básico
+
+### Crear un usuario administrador
+
+```bash
+php artisan tinker
+```
+
+```php
+$user = User::create([
+    'name' => 'Administrador',
+    'email' => 'admin@josegalan.edu.co',
+    'password' => Hash::make('password')
+]);
+
+$user->assignRole('Administrador');
+```
+
+### Acceder al sistema
+
+1. Visita la URL de tu aplicación
+2. Click en "Ingresar con Google"
+3. Autoriza con tu cuenta de Google
+4. Serás redirigido al dashboard
+
+## 🔄 Actualización
+
+```bash
+# Obtener últimos cambios
+git pull origin main
+
+# Actualizar dependencias
+composer install
+npm install
+
+# Ejecutar migraciones pendientes
+php artisan migrate
+
+# Recompilar assets
+npm run build
+
+# Limpiar cachés
+php artisan config:clear
+php artisan cache:clear
+php artisan view:clear
+```
+
+## 🐛 Troubleshooting
+
+### Error de permisos en storage
+
+```bash
+chmod -R 775 storage bootstrap/cache
+chown -R www-data:www-data storage bootstrap/cache
+```
+
+### Error de conexión a base de datos
+
+Verifica que:
+- MySQL/MariaDB esté corriendo
+- Las credenciales en `.env` sean correctas
+- La base de datos exista
+- El usuario tenga permisos
+
+### Error con caracteres especiales (tildes, ñ)
+
+Asegúrate que:
+- La base de datos use `utf8mb4_unicode_ci`
+- En `config/database.php` esté configurado UTF-8MB4
+- Las tablas usen `CHARACTER SET utf8mb4`
+
+## 🤝 Contribución
+
+Las contribuciones son bienvenidas. Por favor:
+
+1. Fork el proyecto
+2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
+3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
+4. Push a la rama (`git push origin feature/AmazingFeature`)
+5. Abre un Pull Request
+
+## 📄 Licencia
+
+Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE` para más detalles.
+
+## 👨‍💻 Autor
+
+**Dorian Ruiz Hernández**
+- GitHub: [@DrRH](https://github.com/DrRH)
+- Email: dorianrodrigo@gmail.com
+
+## 🏛️ Institución
+
+**Institución Educativa José Antonio Galán**
+- Ubicación: Medellín, Colombia
+- Sitio web: [josegalan.edu.co](https://josegalan.edu.co)
+
+## 🙏 Agradecimientos
+
+- [Laravel](https://laravel.com/) - Framework PHP
+- [Tabler](https://tabler.io/) - UI Framework
+- [Spatie](https://spatie.be/) - Laravel Permissions
+- Claude Code - Asistencia en desarrollo
+
+---
+
+⭐ Si este proyecto te es útil, considera darle una estrella en GitHub
+
+📧 Para soporte o consultas: convivencia@josegalan.edu.co
