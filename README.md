@@ -30,7 +30,14 @@ Sistema web moderno y responsive para la gestión administrativa, académica y d
 
 #### ✅ Administración
 - **Gestión de Usuarios**: Crear, editar, eliminar y asignar roles
-- **Configuración Institucional**: Datos de la institución, personalización
+- **Configuración Institucional**: Sistema completo de configuración con 28 campos organizados en pestañas:
+  - Información básica (nombre, dirección, ciudad, departamento, país)
+  - Datos legales (NIT, código DANE, resolución de aprobación)
+  - Información de contacto (emails, teléfonos, sitio web)
+  - Datos de directivos (rector, coordinador)
+  - Configuración académica (año lectivo, calendario, niveles educativos)
+  - Redes sociales (Facebook, Instagram, Twitter, YouTube)
+  - Preferencias del sistema (tema, zona horaria)
 - **Logs y Auditoría**: Seguimiento de actividades (en desarrollo)
 
 #### 🎓 Académico (Estructura preparada)
