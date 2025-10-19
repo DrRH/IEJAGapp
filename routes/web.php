@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\UsersController;
+use App\Http\Controllers\LogsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,11 +16,11 @@ use App\Http\Controllers\UsersController;
 Route::get('/', fn () => redirect()->route('dashboard'));
 
 Route::get('/login', [GoogleController::class, 'redirectToGoogle'])->name('login');
-Route::get('/auth/google/callback', [GoogleController::class, 'handleGoogleCallback'])->name('google.callback');
+Route::get('/auth/google/callback', [GoogleController::class, 'callback'])->name('google.callback');
 
 Route::post('/logout', [GoogleController::class, 'logout'])->name('logout');
 
-// �rea autenticada
+// Área autenticada
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [GoogleController::class, 'dashboard'])->name('dashboard');
 
@@ -28,7 +29,7 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/perfil', [ProfileController::class, 'update'])->name('profile.update');
     Route::put('/perfil/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
 
-    // Configuraci�n institucional
+    // Configuración institucional
     Route::get('/administracion/configuracion', [SettingsController::class, 'index'])->name('settings.index');
     Route::put('/administracion/configuracion', [SettingsController::class, 'update'])->name('settings.update');
 
@@ -44,4 +45,9 @@ Route::middleware(['auth'])->group(function () {
         'update' => 'administracion.usuarios.update',
         'destroy' => 'administracion.usuarios.destroy',
     ]);
+
+    // Logs y Auditoría
+    Route::get('/administracion/logs', [LogsController::class, 'index'])->name('administracion.logs.index');
+    Route::get('/administracion/logs/{log}', [LogsController::class, 'show'])->name('administracion.logs.show');
+    Route::post('/administracion/logs/cleanup', [LogsController::class, 'cleanup'])->name('administracion.logs.cleanup');
 });

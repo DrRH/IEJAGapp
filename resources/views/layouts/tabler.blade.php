@@ -184,7 +184,7 @@
                             <a class="dropdown-item" href="{{ route('settings.index') }}">
                                 <i class="ti ti-building me-2"></i>Configuración Institucional
                             </a>
-                            <a class="dropdown-item" href="/administracion/auditoria">
+                            <a class="dropdown-item" href="{{ route('administracion.logs.index') }}">
                                 <i class="ti ti-file-analytics me-2"></i>Logs y Auditoría
                             </a>
                         </div>
