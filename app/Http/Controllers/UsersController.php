@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ActivityLog;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -53,6 +54,14 @@ class UsersController extends Controller
         if (!empty($validated['roles'])) {
             $user->syncRoles($validated['roles']);
         }
+
+        // Registrar actividad
+        ActivityLog::log(
+            'created',
+            "Usuario '{$user->name}' creado",
+            $user,
+            ['roles' => $validated['roles'] ?? []]
+        );
 
         return redirect()
             ->route('administracion.usuarios.index')
@@ -111,6 +120,17 @@ class UsersController extends Controller
             $user->syncRoles([]);
         }
 
+        // Registrar actividad
+        ActivityLog::log(
+            'updated',
+            "Usuario '{$user->name}' actualizado",
+            $user,
+            [
+                'roles' => $validated['roles'] ?? [],
+                'password_changed' => !empty($validated['password'])
+            ]
+        );
+
         return redirect()
             ->route('administracion.usuarios.index')
             ->with('success', 'Usuario actualizado exitosamente.');
@@ -126,7 +146,19 @@ class UsersController extends Controller
             return back()->with('error', 'No puedes eliminar tu propia cuenta.');
         }
 
+        $userName = $user->name;
         $user->delete();
+
+        // Registrar actividad
+        ActivityLog::create([
+            'user_id' => auth()->id(),
+            'action' => 'deleted',
+            'model_type' => User::class,
+            'model_id' => null,  // El usuario ya no existe
+            'description' => "Usuario '{$userName}' eliminado",
+            'ip_address' => request()->ip(),
+            'user_agent' => request()->userAgent(),
+        ]);
 
         return redirect()
             ->route('administracion.usuarios.index')
@@ -148,6 +180,14 @@ class UsersController extends Controller
         ]);
 
         $status = $user->is_active ? 'activado' : 'desactivado';
+
+        // Registrar actividad
+        ActivityLog::log(
+            'updated',
+            "Usuario '{$user->name}' {$status}",
+            $user,
+            ['is_active' => $user->is_active]
+        );
 
         return back()->with('success', "Usuario {$status} exitosamente.");
     }

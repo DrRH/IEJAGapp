@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ActivityLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
@@ -28,6 +29,13 @@ class ProfileController extends Controller
 
         $user->fill($data)->save();
 
+        // Registrar actividad
+        ActivityLog::log(
+            'updated',
+            'Perfil de usuario actualizado',
+            $user
+        );
+
         return back()->with('success', 'Perfil actualizado correctamente.');
     }
 
@@ -41,12 +49,19 @@ class ProfileController extends Controller
         $user = $request->user();
 
         if (! Hash::check($request->input('current_password'), $user->password)) {
-            return back()->with('error', 'Tu contraseÒa actual no coincide.');
+            return back()->with('error', 'Tu contrase√±a actual no coincide.');
         }
 
         $user->password = Hash::make($request->input('password'));
         $user->save();
 
-        return back()->with('success', 'ContraseÒa actualizada correctamente.');
+        // Registrar actividad
+        ActivityLog::log(
+            'updated',
+            'Contrase√±a actualizada',
+            $user
+        );
+
+        return back()->with('success', 'Contrase√±a actualizada correctamente.');
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ActivityLog;
 use Illuminate\Http\Request;
 use App\Models\Setting;
 
@@ -101,8 +102,26 @@ class SettingsController extends Controller
             'timezone' => ['required', 'string', 'max:100'],
         ]);
 
+        $changedSettings = [];
         foreach ($data as $key => $value) {
+            $oldValue = Setting::get($key);
+            if ($oldValue !== $value) {
+                $changedSettings[$key] = [
+                    'old' => $oldValue,
+                    'new' => $value
+                ];
+            }
             Setting::set($key, $value);
+        }
+
+        // Registrar actividad si hubo cambios
+        if (!empty($changedSettings)) {
+            ActivityLog::log(
+                'updated',
+                'Configuración institucional actualizada',
+                null,
+                ['changed_settings' => array_keys($changedSettings)]
+            );
         }
 
         return back()->with('success', 'Configuración institucional actualizada correctamente.');
