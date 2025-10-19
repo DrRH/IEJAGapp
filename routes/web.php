@@ -6,6 +6,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\LogsController;
+use App\Http\Controllers\EstudiantesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -50,4 +51,18 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/administracion/logs', [LogsController::class, 'index'])->name('administracion.logs.index');
     Route::get('/administracion/logs/{log}', [LogsController::class, 'show'])->name('administracion.logs.show');
     Route::post('/administracion/logs/cleanup', [LogsController::class, 'cleanup'])->name('administracion.logs.cleanup');
+
+    // Módulo Académico - Estudiantes
+    Route::get('/academico/estudiantes/export', [EstudiantesController::class, 'export'])->name('academico.estudiantes.export');
+    Route::resource('academico/estudiantes', EstudiantesController::class)->parameters([
+        'estudiantes' => 'estudiante'
+    ])->names([
+        'index' => 'academico.estudiantes.index',
+        'create' => 'academico.estudiantes.create',
+        'store' => 'academico.estudiantes.store',
+        'show' => 'academico.estudiantes.show',
+        'edit' => 'academico.estudiantes.edit',
+        'update' => 'academico.estudiantes.update',
+        'destroy' => 'academico.estudiantes.destroy',
+    ]);
 });

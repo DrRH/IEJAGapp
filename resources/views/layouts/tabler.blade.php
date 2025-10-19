@@ -102,7 +102,7 @@
                             <span class="nav-link-title">Académico</span>
                         </a>
                         <div class="dropdown-menu {{ request()->is('academico*') ? 'show' : '' }}">
-                            <a class="dropdown-item" href="/academico/estudiantes">
+                            <a class="dropdown-item" href="{{ route('academico.estudiantes.index') }}">
                                 <i class="ti ti-users me-2"></i>Estudiantes
                             </a>
                             <a class="dropdown-item" href="/academico/calificaciones">
