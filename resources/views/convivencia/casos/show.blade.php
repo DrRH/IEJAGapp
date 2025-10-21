@@ -26,9 +26,13 @@
                         <i class="ti ti-file-text me-2"></i>
                         Acta Editable
                     </a>
-                    <a href="{{ route('convivencia.casos.print', $caso) }}" class="btn btn-success" target="_blank">
+                    <a href="{{ route('convivencia.casos.pdf', $caso) }}" class="btn btn-success">
+                        <i class="ti ti-file-download me-2"></i>
+                        Descargar PDF
+                    </a>
+                    <a href="{{ route('convivencia.casos.print', $caso) }}" class="btn btn-outline-secondary" target="_blank">
                         <i class="ti ti-printer me-2"></i>
-                        Vista Impresión
+                        Vista Previa
                     </a>
                     <a href="{{ route('convivencia.casos.edit', $caso) }}" class="btn btn-outline-primary">
                         <i class="ti ti-edit me-2"></i>

@@ -113,11 +113,9 @@
             border-top: 1px solid #ddd;
         }
 
-        /* Numeración de páginas para impresión */
-        @media print {
-            .page-numbering::before {
-                content: "Página " counter(page) " de " counter(pages);
-            }
+        /* Ocultar el span de numeración en vista HTML */
+        .page-numbering {
+            display: none;
         }
 
         /* Tablas de información */
@@ -365,25 +363,17 @@
         <tfoot>
             <tr>
                 <td>
-                    <div class="footer-container">
-                        <script type="text/php">
-                            if (isset($pdf)) {
-                                $text = "Página {PAGE_NUM} de {PAGE_COUNT}";
-                                $font = $fontMetrics->getFont("Arial");
-                                $size = 8;
-                                $color = array(0.4, 0.4, 0.4);
-                                $text_height = $fontMetrics->getFontHeight($font, $size);
-
-                                $w = $pdf->get_width();
-                                $h = $pdf->get_height();
-
-                                $y = $h - 50;
-                                $x = $w / 2 - 40;
-
-                                $pdf->text($x, $y, $text, $font, $size, $color);
-                            }
-                        </script>
-                        <span class="page-numbering"></span>
+                    <div class="footer-container" style="text-align: center;">
+                        <span class="pagenum">
+                            <script type="text/php">
+                                if (isset($pdf)) {
+                                    $font = $fontMetrics->getFont("Arial", "normal");
+                                    $size = 8;
+                                    $pageText = "Página " . $PAGE_NUM . " de " . $PAGE_COUNT;
+                                    $pdf->page_text(0, 0, $pageText, $font, $size, array(0.4, 0.4, 0.4), 2, 2, "center");
+                                }
+                            </script>
+                        </span>
                     </div>
                 </td>
             </tr>
@@ -669,9 +659,5 @@
         </tbody>
     </table>
 
-    <script>
-        // La numeración se maneja automáticamente con CSS counters en @media print
-        // No se requiere JavaScript para la numeración
-    </script>
 </body>
 </html>

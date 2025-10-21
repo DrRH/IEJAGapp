@@ -20,8 +20,11 @@
                         <button type="button" onclick="document.getElementById('formActa').submit()" class="btn btn-primary">
                             <i class="ti ti-device-floppy me-1"></i> Guardar Cambios
                         </button>
-                        <a href="{{ route('convivencia.casos.print', $caso) }}" target="_blank" class="btn btn-success">
-                            <i class="ti ti-printer me-1"></i> Vista de Impresión
+                        <a href="{{ route('convivencia.casos.pdf', $caso) }}" class="btn btn-success">
+                            <i class="ti ti-file-download me-1"></i> Descargar PDF
+                        </a>
+                        <a href="{{ route('convivencia.casos.print', $caso) }}" target="_blank" class="btn btn-outline-secondary">
+                            <i class="ti ti-printer me-1"></i> Vista Previa
                         </a>
                     </div>
                 </div>

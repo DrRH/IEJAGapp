@@ -6,6 +6,7 @@ use App\Models\ActivityLog;
 use App\Models\Estudiante;
 use App\Models\ReporteConvivencia;
 use App\Models\TipoAnotacion;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 
 class CasosController extends Controller
@@ -505,5 +506,40 @@ class CasosController extends Controller
         ActivityLog::log('viewed', "Acta de convivencia del caso #{$caso->id} - {$caso->estudiante->nombre_completo}", $caso);
 
         return view('convivencia.casos.print', compact('caso'));
+    }
+
+    /**
+     * Generar PDF del acta de convivencia
+     */
+    public function downloadPdf(ReporteConvivencia $caso)
+    {
+        // Cargar relaciones necesarias
+        $caso->load([
+            'estudiante.sede',
+            'estudiante.matriculaActual.grupo.grado',
+            'estudiante.matriculaActual.grupo.directorGrupo',
+            'tipoAnotacion',
+            'reportadoPor',
+            'cerradoPor',
+            'estudiantesInvolucrados',
+            'numerales'
+        ]);
+
+        ActivityLog::log('downloaded', "PDF del acta de convivencia del caso #{$caso->id} - {$caso->estudiante->nombre_completo}", $caso);
+
+        // Generar PDF usando DomPDF
+        $pdf = Pdf::loadView('convivencia.casos.print', compact('caso'))
+            ->setPaper('letter', 'portrait')
+            ->setOption('isHtml5ParserEnabled', true)
+            ->setOption('isRemoteEnabled', true)
+            ->setOption('dpi', 96)
+            ->setOption('defaultFont', 'Arial');
+
+        // Nombre del archivo
+        $numeroActa = $caso->numero_acta ?? $caso->id;
+        $nombreEstudiante = str_replace(' ', '_', $caso->estudiante->nombre_completo);
+        $filename = "Acta_Convivencia_{$numeroActa}_{$nombreEstudiante}.pdf";
+
+        return $pdf->download($filename);
     }
 }

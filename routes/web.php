@@ -74,6 +74,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/convivencia/casos/export', [CasosController::class, 'export'])->name('convivencia.casos.export');
     Route::get('/convivencia/casos/{caso}/acta', [CasosController::class, 'acta'])->name('convivencia.casos.acta');
     Route::get('/convivencia/casos/{caso}/print', [CasosController::class, 'print'])->name('convivencia.casos.print');
+    Route::get('/convivencia/casos/{caso}/pdf', [CasosController::class, 'downloadPdf'])->name('convivencia.casos.pdf');
     Route::resource('convivencia/casos', CasosController::class)->parameters([
         'casos' => 'caso'
     ])->names([
