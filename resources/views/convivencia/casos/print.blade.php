@@ -220,6 +220,9 @@
         Imprimir Acta
     </button>
 
+    <!-- Variable oculta para pasar número de acta al script PHP -->
+    <div id="numero_acta" style="display: none;">{{ $caso->numero_acta ?? $caso->id }}</div>
+
     <!-- Script PHP para header y footer en DomPDF -->
     <script type="text/php">
         if (isset($pdf)) {
@@ -227,8 +230,11 @@
             $w = $pdf->get_width();
             $h = $pdf->get_height();
 
+            // Extraer número de acta del DOM
+            $numeroActa = "9"; // Valor por defecto, será reemplazado desde el HTML
+
             // HEADER - Logo y título
-            $logoPath = public_path('img/Escudo.jpg');
+            $logoPath = '/home/IEJAG/web/144.126.142.6.sslip.io/laravel/public/img/Escudo.jpg';
             if (file_exists($logoPath)) {
                 $pdf->image($logoPath, 40, 20, 50, 50);
             }
@@ -239,7 +245,7 @@
 
             // Número de acta (derecha)
             $pdf->text($w - 80, 35, "ACTA N°:", $font, 9, array(0, 0, 0));
-            $pdf->text($w - 80, 50, "{{ $caso->numero_acta ?? $caso->id }}", $font, 11, array(0, 0, 0));
+            $pdf->text($w - 80, 50, $numeroActa, $font, 11, array(0, 0, 0));
 
             // Línea separadora
             $pdf->line(30, 75, $w - 30, 75, array(0, 0, 0), 2);
