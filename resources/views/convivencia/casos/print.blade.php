@@ -15,7 +15,7 @@
          */
 
         @page {
-            margin: 0.5cm 1.5cm 2cm 2cm;
+            margin: 2.8cm 2cm 1.5cm 2cm;
             size: letter;
         }
 
@@ -32,91 +32,6 @@
             color: #000;
         }
 
-        /* Tabla principal que contiene todo el documento */
-        .document-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        /* Encabezado (thead se repite automáticamente) */
-        .document-table thead {
-            display: table-header-group;
-        }
-
-        /* Pie de página (tfoot se repite automáticamente) */
-        .document-table tfoot {
-            display: table-footer-group;
-        }
-
-        .document-table tbody {
-            display: table-row-group;
-        }
-
-        /* Header institucional */
-        .header-table {
-            width: 100%;
-            border: 2px solid #000;
-            border-collapse: collapse;
-            background: white;
-            margin-bottom: 8px;
-        }
-
-        .header-table td {
-            border: 2px solid #000;
-            padding: 6px;
-            vertical-align: middle;
-        }
-
-        .header-logo {
-            width: 80px;
-            text-align: center;
-        }
-
-        .header-logo img {
-            max-width: 65px;
-            height: auto;
-        }
-
-        .placeholder-logo {
-            width: 65px;
-            height: 65px;
-            border: 2px solid #000;
-            border-radius: 50%;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 7pt;
-            text-align: center;
-            font-weight: bold;
-        }
-
-        .header-title {
-            text-align: center;
-            font-weight: bold;
-            font-size: 10pt;
-            line-height: 1.3;
-        }
-
-        .header-acta {
-            width: 110px;
-            text-align: center;
-            font-weight: bold;
-            font-size: 9pt;
-        }
-
-        /* Pie de página */
-        .footer-container {
-            text-align: center;
-            font-size: 8pt;
-            color: #666;
-            padding-top: 8px;
-            border-top: 1px solid #ddd;
-        }
-
-        /* Ocultar el span de numeración en vista HTML */
-        .page-numbering {
-            display: none;
-        }
 
         /* Tablas de información */
         .info-table {
@@ -305,70 +220,36 @@
         Imprimir Acta
     </button>
 
-    <!-- Tabla principal del documento -->
-    <table class="document-table">
-        <!-- ENCABEZADO (se repite en todas las páginas) -->
-        <thead>
-            <tr>
-                <td>
-                    <table class="header-table">
-                        <tr>
-                            <td class="header-logo">
-                                @if(file_exists(public_path('img/Escudo.jpg')))
-                                    <img src="{{ asset('img/Escudo.jpg') }}" alt="Escudo Institucional">
-                                @elseif(file_exists(public_path('images/logo-iejag.png')))
-                                    <img src="{{ asset('images/logo-iejag.png') }}" alt="Logo IEJAG">
-                                @else
-                                    <div class="placeholder-logo">
-                                        ESCUDO<br>IEJAG
-                                    </div>
-                                @endif
-                            </td>
-                            <td class="header-title">
-                                INSTITUCIÓN EDUCATIVA JOSÉ ANTONIO GALÁN<br>
-                                ACTA DE ATENCIÓN A SITUACIÓN DE CONVIVENCIA
-                            </td>
-                            <td class="header-acta">
-                                ACTA N°:<br>
-                                <strong>{{ $caso->numero_acta ?? $caso->id }}</strong>
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-            </tr>
-        </thead>
+    <!-- Script PHP para header y footer en DomPDF -->
+    <script type="text/php">
+        if (isset($pdf)) {
+            $font = $fontMetrics->getFont("Arial");
+            $w = $pdf->get_width();
+            $h = $pdf->get_height();
 
-        <!-- PIE DE PÁGINA (se repite en todas las páginas) -->
-        <tfoot>
-            <tr>
-                <td>
-                    <div class="footer-container" style="text-align: center; font-size: 8pt; color: #666;">
-                        <script type="text/php">
-                            if (isset($pdf)) {
-                                $font = $fontMetrics->getFont("Arial");
-                                $size = 8;
-                                $color = array(0.4, 0.4, 0.4);
+            // HEADER - Logo y título
+            $logoPath = public_path('img/Escudo.jpg');
+            if (file_exists($logoPath)) {
+                $pdf->image($logoPath, 40, 20, 50, 50);
+            }
 
-                                // Obtener dimensiones de la página
-                                $w = $pdf->get_width();
-                                $h = $pdf->get_height();
+            // Título centrado
+            $pdf->text($w / 2, 35, "INSTITUCIÓN EDUCATIVA JOSÉ ANTONIO GALÁN", $font, 10, array(0, 0, 0), 0, 0, "center");
+            $pdf->text($w / 2, 50, "ACTA DE ATENCIÓN A SITUACIÓN DE CONVIVENCIA", $font, 10, array(0, 0, 0), 0, 0, "center");
 
-                                // Posición Y: cerca del borde inferior
-                                $y = $h - 30;
+            // Número de acta (derecha)
+            $pdf->text($w - 80, 35, "ACTA N°:", $font, 9, array(0, 0, 0));
+            $pdf->text($w - 80, 50, "{{ $caso->numero_acta ?? $caso->id }}", $font, 11, array(0, 0, 0));
 
-                                // page_text() usa {PAGE_NUM} y {PAGE_COUNT} que se reemplazan automáticamente
-                                $pdf->page_text($w / 2, $y, "Página {PAGE_NUM} de {PAGE_COUNT}", $font, $size, $color, 0, 0, "center");
-                            }
-                        </script>
-                    </div>
-                </td>
-            </tr>
-        </tfoot>
+            // Línea separadora
+            $pdf->line(30, 75, $w - 30, 75, array(0, 0, 0), 2);
 
-        <!-- CONTENIDO PRINCIPAL -->
-        <tbody>
-            <tr>
-                <td>
+            // FOOTER - Numeración de páginas
+            $pdf->page_text($w / 2, $h - 30, "Página {PAGE_NUM} de {PAGE_COUNT}", $font, 8, array(0.4, 0.4, 0.4), 0, 0, "center");
+        }
+    </script>
+
+    <!-- CONTENIDO PRINCIPAL -->
                     <!-- INFORMACIÓN BÁSICA -->
                     <table class="info-table">
                         <tr>
@@ -640,10 +521,6 @@
                         <p>Este documento ha sido generado oficialmente por el Sistema de Gestión Institucional - IEJAG</p>
                         <p>Generado el: {{ now()->format('d/m/Y H:i:s') }}</p>
                     </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
 
 </body>
 </html>
