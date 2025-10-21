@@ -17,6 +17,8 @@ class TipoAnotacion extends Model
         'codigo',
         'categoria',
         'tipo',
+        'tipo_situacion',
+        'numeral',
         'descripcion',
         'color',
         'puntos',
@@ -132,6 +134,38 @@ class TipoAnotacion extends Model
     public function scopeConSuspension($query)
     {
         return $query->where('requiere_suspension', true);
+    }
+
+    /**
+     * Scope para filtrar por tipo de situación
+     */
+    public function scopePorTipoSituacion($query, $tipoSituacion)
+    {
+        return $query->where('tipo_situacion', $tipoSituacion);
+    }
+
+    /**
+     * Scope para situaciones Tipo I
+     */
+    public function scopeTipoI($query)
+    {
+        return $query->where('tipo_situacion', 'tipo_i');
+    }
+
+    /**
+     * Scope para situaciones Tipo II
+     */
+    public function scopeTipoII($query)
+    {
+        return $query->where('tipo_situacion', 'tipo_ii');
+    }
+
+    /**
+     * Scope para situaciones Tipo III
+     */
+    public function scopeTipoIII($query)
+    {
+        return $query->where('tipo_situacion', 'tipo_iii');
     }
 
     /**

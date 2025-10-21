@@ -125,7 +125,7 @@
                                 <i class="ti ti-clipboard-list me-2"></i>Observador del Estudiante
                             </a>
                             <a class="dropdown-item" href="/convivencia/casos">
-                                <i class="ti ti-gavel me-2"></i>Casos Disciplinarios
+                                <i class="ti ti-gavel me-2"></i>Atención a Situaciones de Convivencia
                             </a>
                             <a class="dropdown-item" href="/convivencia/psicosocial">
                                 <i class="ti ti-stethoscope me-2"></i>Atención Psicosocial

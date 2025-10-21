@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ReporteConvivencia extends Model
@@ -13,6 +14,7 @@ class ReporteConvivencia extends Model
     protected $table = 'reportes_convivencia';
 
     protected $fillable = [
+        'numero_acta',
         'estudiante_id',
         'tipo_anotacion_id',
         'reportado_por',
@@ -22,13 +24,20 @@ class ReporteConvivencia extends Model
         'lugar',
         'testigos',
         'evidencias',
+        'contexto_situacion',
+        'analisis_institucional',
+        'conclusiones',
         'acciones_tomadas',
+        'acciones_pedagogicas',
         'acudiente_notificado',
         'fecha_notificacion_acudiente',
         'medio_notificacion',
         'respuesta_acudiente',
         'requirio_compromiso',
         'compromiso',
+        'compromiso_acudiente',
+        'compromiso_estudiante',
+        'compromiso_institucion',
         'fecha_compromiso',
         'compromiso_cumplido',
         'requirio_suspension',
@@ -92,6 +101,54 @@ class ReporteConvivencia extends Model
     public function cerradoPor(): BelongsTo
     {
         return $this->belongsTo(User::class, 'cerrado_por');
+    }
+
+    /**
+     * Estudiantes involucrados como victimarios
+     */
+    public function victimarios(): BelongsToMany
+    {
+        return $this->belongsToMany(Estudiante::class, 'estudiantes_involucrados', 'reporte_id', 'estudiante_id')
+            ->wherePivot('rol', 'victimario')
+            ->withTimestamps();
+    }
+
+    /**
+     * Estudiantes involucrados como víctimas
+     */
+    public function victimas(): BelongsToMany
+    {
+        return $this->belongsToMany(Estudiante::class, 'estudiantes_involucrados', 'reporte_id', 'estudiante_id')
+            ->wherePivot('rol', 'victima')
+            ->withTimestamps();
+    }
+
+    /**
+     * Todos los estudiantes involucrados (victimarios y víctimas)
+     */
+    public function estudiantesInvolucrados(): BelongsToMany
+    {
+        return $this->belongsToMany(Estudiante::class, 'estudiantes_involucrados', 'reporte_id', 'estudiante_id')
+            ->withPivot('rol')
+            ->withTimestamps();
+    }
+
+    /**
+     * Reportes relacionados por mismo número de acta
+     */
+    public function reportesRelacionados()
+    {
+        return $this->where('numero_acta', $this->numero_acta)
+            ->where('id', '!=', $this->id);
+    }
+
+    /**
+     * Númerales del manual de convivencia aplicables a este reporte
+     */
+    public function numerales(): BelongsToMany
+    {
+        return $this->belongsToMany(TipoAnotacion::class, 'reporte_numeral', 'reporte_id', 'tipo_anotacion_id')
+            ->withTimestamps();
     }
 
     /**

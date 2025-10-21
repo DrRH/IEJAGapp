@@ -74,6 +74,24 @@ class Estudiante extends Model
     }
 
     /**
+     * Matrícula activa actual del estudiante
+     */
+    public function matriculaActual()
+    {
+        return $this->hasOne(Matricula::class)
+            ->where('estado', 'activa')
+            ->where('periodo_academico_id', function($query) {
+                $query->select('id')
+                    ->from('periodos_academicos')
+                    ->where('activo', true)
+                    ->where('anio', date('Y'))
+                    ->orderBy('numero', 'desc')
+                    ->limit(1);
+            })
+            ->with('grupo.grado');
+    }
+
+    /**
      * Reportes de convivencia del estudiante
      */
     public function reportesConvivencia(): HasMany

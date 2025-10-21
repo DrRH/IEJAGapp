@@ -3,6 +3,10 @@
 namespace App\Console\Commands;
 
 use App\Models\Estudiante;
+use App\Models\Grado;
+use App\Models\Grupo;
+use App\Models\Matricula;
+use App\Models\PeriodoAcademico;
 use App\Models\Sede;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
@@ -51,12 +55,14 @@ class ImportEstudiantes extends Command
         $imported = 0;
         $skipped = 0;
         $errors = [];
+        $rowNumber = 0;
 
         while (($row = fgetcsv($handle)) !== false) {
+            $rowNumber++;
             $data = array_combine($headers, $row);
 
             try {
-                $this->importRow($data, $dryRun);
+                $this->importRow($data, $dryRun, $rowNumber);
                 $imported++;
 
                 if ($imported % 10 == 0) {
@@ -65,12 +71,12 @@ class ImportEstudiantes extends Command
             } catch (\Exception $e) {
                 $skipped++;
                 $errors[] = [
-                    'documento' => $data['numero_documento'] ?? 'N/A',
+                    'documento' => $data['DOCUMENTO'] ?? 'N/A',
                     'error' => $e->getMessage()
                 ];
 
                 if ($skipped <= 5) {
-                    $this->warn("Error en fila {$imported}: " . $e->getMessage());
+                    $this->warn("Error en fila {$rowNumber}: " . $e->getMessage());
                 }
             }
         }
@@ -95,31 +101,52 @@ class ImportEstudiantes extends Command
         return 0;
     }
 
-    protected function importRow(array $data, bool $dryRun)
+    protected function importRow(array $data, bool $dryRun, int $rowNumber)
     {
-        // Mapear los datos según las columnas esperadas
+        // Construir fecha de nacimiento desde DIA, MES, AÑO
+        $fechaNacimiento = null;
+        if (isset($data['DIA'], $data['MES'], $data['AÑO']) && $data['DIA'] && $data['MES'] && $data['AÑO']) {
+            $fechaNacimiento = sprintf('%04d-%02d-%02d', $data['AÑO'], $data['MES'], $data['DIA']);
+        }
+
+        // Mapear tipo de documento
+        $tipoDoc = 'TI';
+        if (isset($data['TIPODOC'])) {
+            $tipo = strtoupper(trim($data['TIPODOC']));
+            if (strpos($tipo, 'R.C') !== false || strpos($tipo, 'RC') !== false) $tipoDoc = 'RC';
+            elseif (strpos($tipo, 'T.I') !== false || strpos($tipo, 'TI') !== false) $tipoDoc = 'TI';
+            elseif (strpos($tipo, 'C.C') !== false || strpos($tipo, 'CC') !== false) $tipoDoc = 'CC';
+            elseif (strpos($tipo, 'C.E') !== false || strpos($tipo, 'CE') !== false) $tipoDoc = 'CE';
+            elseif (strpos($tipo, 'P.P.T') !== false || strpos($tipo, 'NUIP') !== false) $tipoDoc = 'NUIP';
+        }
+
+        // Mapear los datos según las columnas del CSV
         $estudianteData = [
-            'nombres' => $data['nombres'] ?? $data['Nombres'] ?? null,
-            'apellidos' => $data['apellidos'] ?? $data['Apellidos'] ?? null,
-            'tipo_documento' => $data['tipo_documento'] ?? $data['Tipo Documento'] ?? 'TI',
-            'numero_documento' => $data['numero_documento'] ?? $data['Número Documento'] ?? $data['Documento'] ?? null,
-            'fecha_nacimiento' => $this->parseDate($data['fecha_nacimiento'] ?? $data['Fecha Nacimiento'] ?? null),
-            'genero' => strtoupper(substr($data['genero'] ?? $data['Género'] ?? 'M', 0, 1)),
-            'direccion' => $data['direccion'] ?? $data['Dirección'] ?? null,
-            'barrio' => $data['barrio'] ?? $data['Barrio'] ?? null,
-            'municipio' => $data['municipio'] ?? $data['Municipio'] ?? 'Medellín',
-            'telefono' => $data['telefono'] ?? $data['Teléfono'] ?? null,
-            'celular' => $data['celular'] ?? $data['Celular'] ?? null,
-            'email' => $data['email'] ?? $data['Email'] ?? null,
-            'nombre_acudiente' => $data['nombre_acudiente'] ?? $data['Acudiente'] ?? 'Por definir',
-            'telefono_acudiente' => $data['telefono_acudiente'] ?? $data['Tel. Acudiente'] ?? '0000000',
-            'email_acudiente' => $data['email_acudiente'] ?? $data['Email Acudiente'] ?? null,
-            'parentesco_acudiente' => $data['parentesco_acudiente'] ?? $data['Parentesco'] ?? null,
-            'codigo_estudiante' => $data['codigo_estudiante'] ?? $data['Código'] ?? null,
-            'estrato' => $data['estrato'] ?? $data['Estrato'] ?? '2',
-            'eps' => $data['eps'] ?? $data['EPS'] ?? null,
-            'estado' => $data['estado'] ?? $data['Estado'] ?? 'activo',
-            'fecha_ingreso' => $this->parseDate($data['fecha_ingreso'] ?? $data['Fecha Ingreso'] ?? now()),
+            'nombres' => trim($data['NOMBRES'] ?? ''),
+            'apellidos' => trim($data['APELLIDOS'] ?? ''),
+            'tipo_documento' => $tipoDoc,
+            'numero_documento' => trim($data['DOCUMENTO'] ?? ''),
+            'fecha_nacimiento' => $fechaNacimiento,
+            'genero' => 'M', // Por defecto, ajustar si tienes columna de género
+            'lugar_nacimiento' => $data['LUGARNACIMIENTO'] ?? null,
+            'direccion' => $data['DIRECCION'] ?? null,
+            'barrio' => $data['BARRIO'] ?? null,
+            'municipio' => $data['DE'] ?? 'Medellín',
+            'telefono' => $data['TELEFONO'] ?? null,
+            'celular' => $data['CELESTUDIANTE'] ?? null,
+            'eps' => $data['EPS'] ?? null,
+            'nombre_madre' => $data['MADRE'] ?? null,
+            'telefono_madre' => $data['CELMADRE'] ?? null,
+            'nombre_padre' => $data['PADRE'] ?? null,
+            'telefono_padre' => $data['CELPADRE'] ?? null,
+            'nombre_acudiente' => $data['ACUDIENTE'] ?? $data['MADRE'] ?? 'Por definir',
+            'telefono_acudiente' => $data['CELACUDIENTE'] ?? $data['CELMADRE'] ?? '0000000',
+            'parentesco_acudiente' => $data['PARENTESCO'] ?? null,
+            'codigo_estudiante' => str_pad($rowNumber, 6, '0', STR_PAD_LEFT),
+            'estrato' => '2',
+            'estado' => (isset($data['ESTADO']) && $data['ESTADO'] === 'OK') ? 'activo' : 'activo',
+            'fecha_ingreso' => now()->format('Y-m-d'),
+            'observaciones_generales' => $data['DIAGNOSTICO'] ?? $data['OBSERVACIONES'] ?? null,
         ];
 
         // Buscar sede si viene en los datos
@@ -154,7 +181,70 @@ class ImportEstudiantes extends Command
             $estudianteData
         );
 
+        // Crear matrícula si hay datos de GRADO y GRUPO
+        if (!empty($data['GRADO']) && !empty($data['GRUPO'])) {
+            $this->crearMatricula($estudiante, $data['GRADO'], $data['GRUPO']);
+        }
+
         $this->line("  ✓ {$estudiante->nombre_completo}");
+    }
+
+    protected function crearMatricula($estudiante, $codigoGrado, $codigoGrupo)
+    {
+        try {
+            // Buscar el grado por código
+            $grado = Grado::where('codigo', $codigoGrado)->first();
+            if (!$grado) {
+                return; // No se puede crear matrícula sin grado
+            }
+
+            // Obtener sede (primera disponible si el estudiante no tiene)
+            $sede = $estudiante->sede ?? Sede::first();
+            if (!$sede) {
+                return;
+            }
+
+            // Determinar el nombre del grupo desde el código
+            // Ejemplo: 010100 -> grado 01, grupo A (primera ocurrencia)
+            // 010200 -> grado 01, grupo B (segunda ocurrencia)
+            // El tercer y cuarto dígito indican el grado, los últimos dos el grupo
+            $grupoNumero = substr($codigoGrupo, 4, 2); // Ej: "01" de "010100"
+            $grupoLetra = chr(64 + intval($grupoNumero)); // 01->A, 02->B, 03->C
+
+            // Buscar el grupo
+            $grupo = Grupo::where('grado_id', $grado->id)
+                ->where('sede_id', $sede->id)
+                ->where('anio', 2025)
+                ->where('nombre', $grupoLetra)
+                ->first();
+
+            if (!$grupo) {
+                return; // No se puede crear matrícula sin grupo
+            }
+
+            // Obtener período académico activo
+            $periodo = PeriodoAcademico::where('anio', 2025)->where('activo', true)->first();
+            if (!$periodo) {
+                return;
+            }
+
+            // Crear la matrícula
+            Matricula::firstOrCreate(
+                [
+                    'estudiante_id' => $estudiante->id,
+                    'grupo_id' => $grupo->id,
+                    'periodo_academico_id' => $periodo->id,
+                ],
+                [
+                    'fecha_matricula' => now(),
+                    'estado' => 'activa',
+                    'numero_matricula' => 'MAT-2025-' . str_pad($estudiante->id, 6, '0', STR_PAD_LEFT),
+                ]
+            );
+        } catch (\Exception $e) {
+            // Silenciosamente fallar si no se puede crear la matrícula
+            // El estudiante se importa de todos modos
+        }
     }
 
     protected function parseDate($date)

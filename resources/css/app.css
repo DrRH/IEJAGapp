@@ -15,3 +15,28 @@
 body {
   tus estilos aqu�
 }*/
+
+/* ========================================
+   Personalización del menú lateral
+   ======================================== */
+
+/* Reducir gap entre items del menú vertical */
+.navbar-vertical .navbar-nav .nav-item {
+  margin-bottom: 0.25rem; /* Reducido de 0.5rem (default) a 0.25rem */
+}
+
+.navbar-vertical .navbar-nav .nav-link {
+  padding-top: 0.5rem;    /* Reducido de 0.625rem a 0.5rem */
+  padding-bottom: 0.5rem; /* Reducido de 0.625rem a 0.5rem */
+}
+
+/* Reducir espaciado en dropdowns del menú */
+.navbar-vertical .dropdown-menu .dropdown-item {
+  padding-top: 0.4rem;    /* Reducido de 0.5rem a 0.4rem */
+  padding-bottom: 0.4rem; /* Reducido de 0.5rem a 0.4rem */
+}
+
+/* Ajustar padding del contenedor de navegación */
+.navbar-vertical .navbar-nav.pt-lg-3 {
+  padding-top: 1rem !important; /* Reducido de 1.5rem (pt-lg-3) a 1rem */
+}

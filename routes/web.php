@@ -7,6 +7,10 @@ use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\LogsController;
 use App\Http\Controllers\EstudiantesController;
+use App\Http\Controllers\CasosController;
+use App\Http\Controllers\ReportesConvivenciaController;
+use App\Http\Controllers\ComitesConvivenciaController;
+use App\Http\Controllers\AIAssistantController;
 
 /*
 |--------------------------------------------------------------------------
@@ -65,4 +69,49 @@ Route::middleware(['auth'])->group(function () {
         'update' => 'academico.estudiantes.update',
         'destroy' => 'academico.estudiantes.destroy',
     ]);
+
+    // Módulo Convivencia - Atención a Situaciones de Convivencia
+    Route::get('/convivencia/casos/export', [CasosController::class, 'export'])->name('convivencia.casos.export');
+    Route::get('/convivencia/casos/{caso}/acta', [CasosController::class, 'acta'])->name('convivencia.casos.acta');
+    Route::get('/convivencia/casos/{caso}/print', [CasosController::class, 'print'])->name('convivencia.casos.print');
+    Route::resource('convivencia/casos', CasosController::class)->parameters([
+        'casos' => 'caso'
+    ])->names([
+        'index' => 'convivencia.casos.index',
+        'create' => 'convivencia.casos.create',
+        'store' => 'convivencia.casos.store',
+        'show' => 'convivencia.casos.show',
+        'edit' => 'convivencia.casos.edit',
+        'update' => 'convivencia.casos.update',
+        'destroy' => 'convivencia.casos.destroy',
+    ]);
+
+    // Módulo Reportes - Reportes de Convivencia
+    Route::get('/reportes/convivencia', [ReportesConvivenciaController::class, 'index'])->name('reportes.convivencia.index');
+    Route::get('/reportes/convivencia/export-csv', [ReportesConvivenciaController::class, 'exportCSV'])->name('reportes.convivencia.export-csv');
+    Route::get('/reportes/convivencia/export-pdf', [ReportesConvivenciaController::class, 'exportPDF'])->name('reportes.convivencia.export-pdf');
+
+    // Módulo Actas - Comité de Convivencia
+    Route::post('/actas/comite-convivencia/{acta}/aprobar', [ComitesConvivenciaController::class, 'aprobar'])->name('actas.comite-convivencia.aprobar');
+    Route::post('/actas/comite-convivencia/{acta}/publicar', [ComitesConvivenciaController::class, 'publicar'])->name('actas.comite-convivencia.publicar');
+    Route::get('/actas/comite-convivencia/{acta}/export-pdf', [ComitesConvivenciaController::class, 'exportPDF'])->name('actas.comite-convivencia.export-pdf');
+    Route::resource('actas/comite-convivencia', ComitesConvivenciaController::class)->parameters([
+        'comite-convivencia' => 'acta'
+    ])->names([
+        'index' => 'actas.comite-convivencia.index',
+        'create' => 'actas.comite-convivencia.create',
+        'store' => 'actas.comite-convivencia.store',
+        'show' => 'actas.comite-convivencia.show',
+        'edit' => 'actas.comite-convivencia.edit',
+        'update' => 'actas.comite-convivencia.update',
+        'destroy' => 'actas.comite-convivencia.destroy',
+    ]);
+
+    // AI Assistant - Asistente de IA
+    Route::prefix('api/ai-assistant')->name('ai.')->group(function () {
+        Route::post('/generar-sugerencia', [AIAssistantController::class, 'generarSugerencia'])->name('generar-sugerencia');
+        Route::post('/mejorar-texto', [AIAssistantController::class, 'mejorarTexto'])->name('mejorar-texto');
+        Route::post('/sugerencia-streaming', [AIAssistantController::class, 'sugerenciaStreaming'])->name('sugerencia-streaming');
+        Route::get('/verificar-estado', [AIAssistantController::class, 'verificarEstado'])->name('verificar-estado');
+    });
 });

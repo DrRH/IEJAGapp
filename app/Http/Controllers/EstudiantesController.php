@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\ActivityLog;
 use App\Models\Estudiante;
+use App\Models\Grado;
+use App\Models\Grupo;
 use App\Models\Sede;
 use Illuminate\Http\Request;
 
@@ -14,7 +16,7 @@ class EstudiantesController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Estudiante::with('sede');
+        $query = Estudiante::with('sede', 'matriculaActual.grupo.grado');
 
         // Filtros
         if ($request->filled('search')) {
@@ -29,18 +31,66 @@ class EstudiantesController extends Controller
             $query->where('estado', $request->estado);
         }
 
-        if ($request->filled('grado')) {
-            // Este filtro se implementará cuando tengamos la relación con matrículas
+        // Filtro por grado (soporta selección múltiple)
+        if ($request->filled('grado_id')) {
+            $gradoIds = is_array($request->grado_id) ? $request->grado_id : [$request->grado_id];
+            $query->whereHas('matriculaActual', function($q) use ($gradoIds) {
+                $q->whereHas('grupo', function($q2) use ($gradoIds) {
+                    $q2->whereIn('grado_id', $gradoIds);
+                });
+            });
         }
 
-        $estudiantes = $query->orderBy('apellidos')
-            ->orderBy('nombres')
-            ->paginate(20)
+        // Filtro por grupo (soporta selección múltiple)
+        if ($request->filled('grupo_id')) {
+            $grupoIds = is_array($request->grupo_id) ? $request->grupo_id : [$request->grupo_id];
+            $query->whereHas('matriculaActual', function($q) use ($grupoIds) {
+                $q->whereIn('grupo_id', $grupoIds);
+            });
+        }
+
+        // Cantidad de filas por página (con validación)
+        $perPage = $request->input('per_page', 20);
+        $perPage = is_numeric($perPage) && $perPage > 0 && $perPage <= 1000 ? (int)$perPage : 20;
+
+        // Ordenamiento
+        $sortColumn = $request->input('sort', 'apellidos');
+        $sortDirection = $request->input('direction', 'asc');
+
+        // Validar columna de ordenamiento
+        $allowedSorts = ['codigo_estudiante', 'nombre_completo', 'numero_documento', 'sede_id', 'estado', 'apellidos', 'nombres'];
+        if (!in_array($sortColumn, $allowedSorts)) {
+            $sortColumn = 'apellidos';
+        }
+
+        // Validar dirección
+        if (!in_array($sortDirection, ['asc', 'desc'])) {
+            $sortDirection = 'asc';
+        }
+
+        // Aplicar ordenamiento
+        if ($sortColumn === 'nombre_completo') {
+            // Para nombre completo, ordenar por apellidos y luego nombres
+            $query->orderBy('apellidos', $sortDirection)
+                  ->orderBy('nombres', $sortDirection);
+        } else {
+            $query->orderBy($sortColumn, $sortDirection);
+
+            // Ordenamiento secundario por apellidos y nombres si no es el criterio principal
+            if (!in_array($sortColumn, ['apellidos', 'nombres'])) {
+                $query->orderBy('apellidos', 'asc')
+                      ->orderBy('nombres', 'asc');
+            }
+        }
+
+        $estudiantes = $query->paginate($perPage)
             ->withQueryString();
 
         $sedes = Sede::activas()->orderBy('nombre')->get();
+        $grados = Grado::orderBy('orden')->get();
+        $grupos = Grupo::with('grado')->where('anio', 2025)->orderBy('nombre')->get();
 
-        return view('academico.estudiantes.index', compact('estudiantes', 'sedes'));
+        return view('academico.estudiantes.index', compact('estudiantes', 'sedes', 'grados', 'grupos'));
     }
 
     /**

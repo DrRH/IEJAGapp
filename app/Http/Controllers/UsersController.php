@@ -13,11 +13,20 @@ class UsersController extends Controller
     /**
      * Mostrar lista de usuarios
      */
-    public function index()
+    public function index(Request $request)
     {
+        // Cantidad de filas por página (con validación)
+        $perPage = $request->input('per_page', 20);
+        $perPage = is_numeric($perPage) && $perPage > 0 && $perPage <= 1000 ? (int)$perPage : 20;
+
         $users = User::with('roles')
+            ->when($request->filled('search'), function($query) use ($request) {
+                $query->where('name', 'like', '%' . $request->search . '%')
+                      ->orWhere('email', 'like', '%' . $request->search . '%');
+            })
             ->orderBy('created_at', 'desc')
-            ->paginate(15);
+            ->paginate($perPage)
+            ->withQueryString();
 
         return view('administracion.usuarios.index', compact('users'));
     }

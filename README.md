@@ -11,6 +11,20 @@ Sistema integral de gestión institucional desarrollado con Laravel 11 para la I
 
 Sistema web moderno y responsive para la gestión administrativa, académica y de convivencia escolar. Diseñado específicamente para instituciones educativas colombianas, integrando las mejores prácticas de desarrollo y seguridad.
 
+## 🤖 Nuevo: Asistente de IA con Sugerencias en Tiempo Real
+
+El sistema ahora incluye un **Asistente de Inteligencia Artificial con ChatGPT** que ayuda a los usuarios en la redacción de actas del Comité de Convivencia:
+
+- 🆕 **Sugerencias en tiempo real** tipo "GitHub Copilot" mientras escribe (experimental)
+- ⌨️ **Ghost text**: Autocompletado inteligente con `Tab` para aceptar
+- ✨ **Generación automática** de desarrollo completo de reuniones
+- 📝 **Mejora de texto** (expandir, resumir, formalizar)
+- 🎯 **Especializado** en normatividad colombiana (Ley 1620/2013)
+- 💰 **Económico**: ~$0.0001 USD por acta generada
+- 🔒 **Privado**: Los datos no se almacenan permanentemente en OpenAI
+
+[Ver documentación completa del Asistente de IA →](ASISTENTE_IA.md)
+
 ## ✨ Características Principales
 
 ### 🔐 Autenticación y Seguridad
@@ -52,11 +66,16 @@ Sistema web moderno y responsive para la gestión administrativa, académica y d
 - Atención psicosocial
 - Comité de convivencia
 
-#### 📝 Actas y Comités (Estructura preparada)
-- Actas generales
-- Comité académico
-- Comité de convivencia
-- Gestión documental
+#### 📝 Actas y Comités
+- **Comité Escolar de Convivencia**: CRUD completo con:
+  - Numeración automática consecutiva (CEC-YYYY-NNN)
+  - Resumen ejecutivo para vista de tabla
+  - Estados: borrador, aprobada, publicada
+  - Integración con casos de convivencia
+  - **🤖 Asistente de IA con ChatGPT** para redacción de actas
+  - Exportación a PDF
+- Actas generales (estructura preparada)
+- Comité académico (estructura preparada)
 
 #### 📈 Reportes e Indicadores (Estructura preparada)
 - Reportes académicos
@@ -84,6 +103,7 @@ Sistema web moderno y responsive para la gestión administrativa, académica y d
 - **PHP 8.3+** - Lenguaje de programación
 - **MySQL/MariaDB** - Base de datos
 - **Spatie Permission** - Gestión de roles y permisos
+- **OpenAI API** - Asistente de IA con ChatGPT
 
 ### Frontend
 - **Tabler UI** - Framework CSS
@@ -199,6 +219,27 @@ Visita: `http://localhost:8000`
    - **JavaScript origins**: `https://tu-dominio.com`
    - **Redirect URIs**: `https://tu-dominio.com/auth/google/callback`
 6. Copia el Client ID y Client Secret al `.env`
+
+### Configurar OpenAI (Asistente de IA)
+
+El sistema incluye un asistente de IA con ChatGPT para ayudar en la redacción de actas del Comité de Convivencia.
+
+1. Crea una cuenta en [OpenAI Platform](https://platform.openai.com/)
+2. Genera una API Key en [API Keys](https://platform.openai.com/api-keys)
+3. Agrega la configuración al `.env`:
+
+```env
+OPENAI_API_KEY=sk-proj-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+OPENAI_ORGANIZATION=org-xxxxxxxxxxxxxxxx
+OPENAI_MODEL=gpt-4o-mini
+```
+
+**Notas importantes:**
+- **ChatGPT Pro ≠ OpenAI API**: Son sistemas de facturación separados
+- Debe agregar créditos a la API (mínimo $5 USD recomendado)
+- Modelo recomendado: `gpt-4o-mini` (económico y eficiente)
+- Costo aproximado: $0.0001 USD por acta generada
+- Ver documentación completa en [ASISTENTE_IA.md](ASISTENTE_IA.md)
 
 ## 👤 Roles Predefinidos
 
