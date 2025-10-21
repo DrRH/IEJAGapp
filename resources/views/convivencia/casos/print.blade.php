@@ -363,17 +363,29 @@
         <tfoot>
             <tr>
                 <td>
-                    <div class="footer-container" style="text-align: center;">
-                        <span class="pagenum">
-                            <script type="text/php">
-                                if (isset($pdf)) {
-                                    $font = $fontMetrics->getFont("Arial", "normal");
-                                    $size = 8;
-                                    $pageText = "Página " . $PAGE_NUM . " de " . $PAGE_COUNT;
-                                    $pdf->page_text(0, 0, $pageText, $font, $size, array(0.4, 0.4, 0.4), 2, 2, "center");
-                                }
-                            </script>
-                        </span>
+                    <div class="footer-container" style="text-align: center; font-size: 8pt; color: #666;">
+                        <script type="text/php">
+                            if (isset($pdf)) {
+                                $font = $fontMetrics->getFont("Arial");
+                                $size = 8;
+                                $color = array(0.4, 0.4, 0.4);
+
+                                // Obtener dimensiones de la página
+                                $w = $pdf->get_width();
+                                $h = $pdf->get_height();
+
+                                // Posición del texto: centrado horizontalmente, cerca del borde inferior
+                                $y = $h - 30;
+                                $text = "Página {PAGE_NUM} de {PAGE_COUNT}";
+
+                                // Calcular ancho del texto para centrarlo
+                                $textWidth = $fontMetrics->getTextWidth($text, $font, $size);
+                                $x = ($w - $textWidth) / 2;
+
+                                // Dibujar el texto
+                                $pdf->text($x, $y, $text, $font, $size, $color);
+                            }
+                        </script>
                     </div>
                 </td>
             </tr>
