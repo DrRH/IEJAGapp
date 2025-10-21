@@ -542,32 +542,27 @@ class CasosController extends Controller
 
         $pdf->getDomPDF()->setCallbacks([
             'myCallbacks' => [
-                'event' => 'end_frame', 'f' => function ($infos) use ($numeroActa, $logoPath) {
-                    $frame = $infos['frame'];
-                    if ($frame->get_node()->nodeName === 'body') {
-                        $canvas = $infos['canvas'];
-                        $font = $canvas->get_font_metrics()->getFont("Arial");
-                        $w = $canvas->get_width();
-                        $h = $canvas->get_height();
+                'event' => 'end_page', 'f' => function ($infos) use ($numeroActa, $logoPath) {
+                    $canvas = $infos['canvas'];
+                    $font = $canvas->get_font_metrics()->getFont("Arial");
+                    $w = $canvas->get_width();
+                    $h = $canvas->get_height();
 
-                        // HEADER - Escudo
-                        if (file_exists($logoPath)) {
-                            $canvas->image($logoPath, 40, 20, 50, 50);
-                        }
-
-                        // HEADER - Títulos
-                        $canvas->text($w / 2 - 150, 35, "INSTITUCIÓN EDUCATIVA JOSÉ ANTONIO GALÁN", $font, 10, [0, 0, 0]);
-                        $canvas->text($w / 2 - 160, 50, "ACTA DE ATENCIÓN A SITUACIÓN DE CONVIVENCIA", $font, 10, [0, 0, 0]);
-
-                        // HEADER - Número de acta
-                        $canvas->text($w - 120, 35, "ACTA N°:", $font, 9, [0, 0, 0]);
-                        $canvas->text($w - 120, 50, (string)$numeroActa, $font, 11, [0, 0, 0]);
-
-                        // HEADER - Línea separadora
-                        $canvas->line(30, 75, $w - 30, 75, [0, 0, 0], 2);
-
-                        // FOOTER - Numeración (se maneja con page_text en la vista)
+                    // HEADER - Escudo
+                    if (file_exists($logoPath)) {
+                        $canvas->image($logoPath, 40, 20, 50, 50);
                     }
+
+                    // HEADER - Títulos
+                    $canvas->text($w / 2 - 150, 35, "INSTITUCIÓN EDUCATIVA JOSÉ ANTONIO GALÁN", $font, 10, [0, 0, 0]);
+                    $canvas->text($w / 2 - 160, 50, "ACTA DE ATENCIÓN A SITUACIÓN DE CONVIVENCIA", $font, 10, [0, 0, 0]);
+
+                    // HEADER - Número de acta
+                    $canvas->text($w - 120, 35, "ACTA N°:", $font, 9, [0, 0, 0]);
+                    $canvas->text($w - 120, 50, (string)$numeroActa, $font, 11, [0, 0, 0]);
+
+                    // HEADER - Línea separadora
+                    $canvas->line(30, 75, $w - 30, 75, [0, 0, 0], 2);
                 }
             ]
         ]);
