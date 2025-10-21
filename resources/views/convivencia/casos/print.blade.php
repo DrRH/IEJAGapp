@@ -113,13 +113,24 @@
             border-top: 1px solid #ddd;
         }
 
-        /* Numeración de páginas para navegadores */
+        /* Numeración de páginas para impresión */
+        .page-numbering::after {
+            content: "";
+        }
+
         @media print {
-            .page-number::before {
-                content: counter(page);
+            .footer-container {
+                position: running(footer);
             }
-            .page-total::before {
-                content: counter(pages);
+
+            @page {
+                @bottom-center {
+                    content: element(footer);
+                }
+            }
+
+            .page-numbering::after {
+                content: "Página " counter(page) " de " counter(pages);
             }
         }
 
@@ -386,7 +397,7 @@
                                 $pdf->text($x, $y, $text, $font, $size, $color);
                             }
                         </script>
-                        Página <span class="page-number"></span> de <span class="page-total"></span>
+                        <span class="page-numbering"></span>
                     </div>
                 </td>
             </tr>
@@ -673,10 +684,12 @@
     </table>
 
     <script>
-        // Numeración de páginas en vista previa (navegador)
-        document.addEventListener('DOMContentLoaded', function() {
-            // Este script es para vista en navegador
-            // La numeración real de páginas se hace vía CSS @page counter
+        // Texto para vista en navegador (no impresión)
+        window.addEventListener('DOMContentLoaded', function() {
+            var pageNumberSpan = document.querySelector('.page-numbering');
+            if (pageNumberSpan && !pageNumberSpan.textContent) {
+                pageNumberSpan.textContent = 'Página X de Y';
+            }
         });
     </script>
 </body>
