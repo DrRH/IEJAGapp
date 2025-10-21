@@ -113,6 +113,16 @@
             border-top: 1px solid #ddd;
         }
 
+        /* Numeración de páginas para navegadores */
+        @media print {
+            .page-number::before {
+                content: counter(page);
+            }
+            .page-total::before {
+                content: counter(pages);
+            }
+        }
+
         /* Tablas de información */
         .info-table {
             width: 100%;
@@ -331,9 +341,9 @@
                         <tr>
                             <td class="header-logo">
                                 @if(file_exists(public_path('img/Escudo.jpg')))
-                                    <img src="{{ public_path('img/Escudo.jpg') }}" alt="Escudo Institucional">
+                                    <img src="{{ asset('img/Escudo.jpg') }}" alt="Escudo Institucional">
                                 @elseif(file_exists(public_path('images/logo-iejag.png')))
-                                    <img src="{{ public_path('images/logo-iejag.png') }}" alt="Logo IEJAG">
+                                    <img src="{{ asset('images/logo-iejag.png') }}" alt="Logo IEJAG">
                                 @else
                                     <div class="placeholder-logo">
                                         ESCUDO<br>IEJAG
@@ -376,7 +386,7 @@
                                 $pdf->text($x, $y, $text, $font, $size, $color);
                             }
                         </script>
-                        Página <span class="page-number"></span>
+                        Página <span class="page-number"></span> de <span class="page-total"></span>
                     </div>
                 </td>
             </tr>
