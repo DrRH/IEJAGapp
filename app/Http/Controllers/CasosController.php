@@ -532,6 +532,7 @@ class CasosController extends Controller
             ->setPaper('letter', 'portrait')
             ->setOption('isHtml5ParserEnabled', true)
             ->setOption('isRemoteEnabled', true)
+            ->setOption('isPhpEnabled', true)
             ->setOption('dpi', 96)
             ->setOption('defaultFont', 'Arial');
 

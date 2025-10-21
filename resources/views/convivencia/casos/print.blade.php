@@ -293,30 +293,9 @@
             }
         }
 
-        /* Botón de impresión (no se imprime) */
+        /* Botón de impresión - oculto en PDF */
         .print-button {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 12px 24px;
-            background-color: #206bc4;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-            z-index: 9999;
-        }
-
-        .print-button:hover {
-            background-color: #1a5a9e;
-        }
-
-        @media print {
-            .print-button {
-                display: none;
-            }
+            display: none !important;
         }
     </style>
 </head>
