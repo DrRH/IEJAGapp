@@ -15,8 +15,69 @@
          */
 
         @page {
-            margin: 2.8cm 2cm 1.5cm 2cm;
+            margin: 3cm 2cm 2cm 2cm;
             size: letter;
+        }
+
+        /* Header fijo en cada página */
+        .page-header {
+            position: fixed;
+            top: -3cm;
+            left: 0;
+            right: 0;
+            height: 2.5cm;
+            padding: 0.3cm 2cm;
+        }
+
+        .header-content {
+            width: 100%;
+            border: 2px solid #000;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        .header-content td {
+            border: 2px solid #000;
+            padding: 6px;
+            vertical-align: middle;
+        }
+
+        .header-logo {
+            width: 80px;
+            text-align: center;
+        }
+
+        .header-logo img {
+            max-width: 65px;
+            height: auto;
+        }
+
+        .header-title {
+            text-align: center;
+            font-weight: bold;
+            font-size: 10pt;
+            line-height: 1.3;
+        }
+
+        .header-acta {
+            width: 110px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 9pt;
+        }
+
+        /* Footer fijo en cada página */
+        .page-footer {
+            position: fixed;
+            bottom: -2cm;
+            left: 0;
+            right: 0;
+            height: 1.5cm;
+            text-align: center;
+            font-size: 8pt;
+            color: #666;
+            padding-top: 0.3cm;
+            border-top: 1px solid #ddd;
         }
 
         * {
@@ -220,40 +281,42 @@
         Imprimir Acta
     </button>
 
-    <!-- Variable oculta para pasar número de acta al script PHP -->
-    <div id="numero_acta" style="display: none;">{{ $caso->numero_acta ?? $caso->id }}</div>
+    <!-- HEADER que se repite en cada página -->
+    <div class="page-header">
+        <table class="header-content">
+            <tr>
+                <td class="header-logo">
+                    @if(file_exists(public_path('img/Escudo.jpg')))
+                        <img src="{{ asset('img/Escudo.jpg') }}" alt="Escudo Institucional">
+                    @else
+                        <div style="width: 65px; height: 65px; border: 2px solid #000; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 7pt; font-weight: bold;">ESCUDO</div>
+                    @endif
+                </td>
+                <td class="header-title">
+                    INSTITUCIÓN EDUCATIVA JOSÉ ANTONIO GALÁN<br>
+                    ACTA DE ATENCIÓN A SITUACIÓN DE CONVIVENCIA
+                </td>
+                <td class="header-acta">
+                    ACTA N°:<br>
+                    <strong>{{ $caso->numero_acta ?? $caso->id }}</strong>
+                </td>
+            </tr>
+        </table>
+    </div>
 
-    <!-- Script PHP para header y footer en DomPDF -->
-    <script type="text/php">
-        if (isset($pdf)) {
-            $font = $fontMetrics->getFont("Arial");
-            $w = $pdf->get_width();
-            $h = $pdf->get_height();
-
-            // Extraer número de acta del DOM
-            $numeroActa = "9"; // Valor por defecto, será reemplazado desde el HTML
-
-            // HEADER - Logo y título
-            $logoPath = '/home/IEJAG/web/144.126.142.6.sslip.io/laravel/public/img/Escudo.jpg';
-            if (file_exists($logoPath)) {
-                $pdf->image($logoPath, 40, 20, 50, 50);
+    <!-- FOOTER que se repite en cada página -->
+    <div class="page-footer">
+        <script type="text/php">
+            if (isset($pdf)) {
+                $font = $fontMetrics->getFont("Arial");
+                $size = 8;
+                $color = array(0.4, 0.4, 0.4);
+                $w = $pdf->get_width();
+                $h = $pdf->get_height();
+                $pdf->page_text($w / 2, $h - 30, "Página {PAGE_NUM} de {PAGE_COUNT}", $font, $size, $color, 0, 0, "center");
             }
-
-            // Título centrado
-            $pdf->text($w / 2, 35, "INSTITUCIÓN EDUCATIVA JOSÉ ANTONIO GALÁN", $font, 10, array(0, 0, 0), 0, 0, "center");
-            $pdf->text($w / 2, 50, "ACTA DE ATENCIÓN A SITUACIÓN DE CONVIVENCIA", $font, 10, array(0, 0, 0), 0, 0, "center");
-
-            // Número de acta (derecha)
-            $pdf->text($w - 80, 35, "ACTA N°:", $font, 9, array(0, 0, 0));
-            $pdf->text($w - 80, 50, $numeroActa, $font, 11, array(0, 0, 0));
-
-            // Línea separadora
-            $pdf->line(30, 75, $w - 30, 75, array(0, 0, 0), 2);
-
-            // FOOTER - Numeración de páginas
-            $pdf->page_text($w / 2, $h - 30, "Página {PAGE_NUM} de {PAGE_COUNT}", $font, 8, array(0.4, 0.4, 0.4), 0, 0, "center");
-        }
-    </script>
+        </script>
+    </div>
 
     <!-- CONTENIDO PRINCIPAL -->
                     <!-- INFORMACIÓN BÁSICA -->
