@@ -114,22 +114,8 @@
         }
 
         /* Numeración de páginas para impresión */
-        .page-numbering::after {
-            content: "";
-        }
-
         @media print {
-            .footer-container {
-                position: running(footer);
-            }
-
-            @page {
-                @bottom-center {
-                    content: element(footer);
-                }
-            }
-
-            .page-numbering::after {
+            .page-numbering::before {
                 content: "Página " counter(page) " de " counter(pages);
             }
         }
@@ -684,13 +670,8 @@
     </table>
 
     <script>
-        // Texto para vista en navegador (no impresión)
-        window.addEventListener('DOMContentLoaded', function() {
-            var pageNumberSpan = document.querySelector('.page-numbering');
-            if (pageNumberSpan && !pageNumberSpan.textContent) {
-                pageNumberSpan.textContent = 'Página X de Y';
-            }
-        });
+        // La numeración se maneja automáticamente con CSS counters en @media print
+        // No se requiere JavaScript para la numeración
     </script>
 </body>
 </html>
