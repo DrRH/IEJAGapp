@@ -19,67 +19,6 @@
             size: letter;
         }
 
-        /* Header fijo en cada página */
-        .page-header {
-            position: fixed;
-            top: -3cm;
-            left: 0;
-            right: 0;
-            height: 2.5cm;
-            padding: 0.3cm 2cm;
-        }
-
-        .header-content {
-            width: 100%;
-            border: 2px solid #000;
-            border-collapse: collapse;
-            background: white;
-        }
-
-        .header-content td {
-            border: 2px solid #000;
-            padding: 6px;
-            vertical-align: middle;
-        }
-
-        .header-logo {
-            width: 80px;
-            text-align: center;
-        }
-
-        .header-logo img {
-            max-width: 65px;
-            height: auto;
-        }
-
-        .header-title {
-            text-align: center;
-            font-weight: bold;
-            font-size: 10pt;
-            line-height: 1.3;
-        }
-
-        .header-acta {
-            width: 110px;
-            text-align: center;
-            font-weight: bold;
-            font-size: 9pt;
-        }
-
-        /* Footer fijo en cada página */
-        .page-footer {
-            position: fixed;
-            bottom: -2cm;
-            left: 0;
-            right: 0;
-            height: 1.5cm;
-            text-align: center;
-            font-size: 8pt;
-            color: #666;
-            padding-top: 0.3cm;
-            border-top: 1px solid #ddd;
-        }
-
         * {
             margin: 0;
             padding: 0;
@@ -281,42 +220,17 @@
         Imprimir Acta
     </button>
 
-    <!-- HEADER que se repite en cada página -->
-    <div class="page-header">
-        <table class="header-content">
-            <tr>
-                <td class="header-logo">
-                    @if(file_exists(public_path('img/Escudo.jpg')))
-                        <img src="{{ asset('img/Escudo.jpg') }}" alt="Escudo Institucional">
-                    @else
-                        <div style="width: 65px; height: 65px; border: 2px solid #000; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 7pt; font-weight: bold;">ESCUDO</div>
-                    @endif
-                </td>
-                <td class="header-title">
-                    INSTITUCIÓN EDUCATIVA JOSÉ ANTONIO GALÁN<br>
-                    ACTA DE ATENCIÓN A SITUACIÓN DE CONVIVENCIA
-                </td>
-                <td class="header-acta">
-                    ACTA N°:<br>
-                    <strong>{{ $caso->numero_acta ?? $caso->id }}</strong>
-                </td>
-            </tr>
-        </table>
-    </div>
-
-    <!-- FOOTER que se repite en cada página -->
-    <div class="page-footer">
-        <script type="text/php">
-            if (isset($pdf)) {
-                $font = $fontMetrics->getFont("Arial");
-                $size = 8;
-                $color = array(0.4, 0.4, 0.4);
-                $w = $pdf->get_width();
-                $h = $pdf->get_height();
-                $pdf->page_text($w / 2, $h - 30, "Página {PAGE_NUM} de {PAGE_COUNT}", $font, $size, $color, 0, 0, "center");
-            }
-        </script>
-    </div>
+    <!-- FOOTER con numeración de páginas -->
+    <script type="text/php">
+        if (isset($pdf)) {
+            $font = $fontMetrics->getFont("Arial");
+            $size = 8;
+            $color = array(0.4, 0.4, 0.4);
+            $w = $pdf->get_width();
+            $h = $pdf->get_height();
+            $pdf->page_text($w / 2, $h - 30, "Página {PAGE_NUM} de {PAGE_COUNT}", $font, $size, $color, 0, 0, "center");
+        }
+    </script>
 
     <!-- CONTENIDO PRINCIPAL -->
                     <!-- INFORMACIÓN BÁSICA -->
