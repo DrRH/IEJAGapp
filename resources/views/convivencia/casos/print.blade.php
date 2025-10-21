@@ -353,16 +353,11 @@
                                 $w = $pdf->get_width();
                                 $h = $pdf->get_height();
 
-                                // Posición del texto: centrado horizontalmente, cerca del borde inferior
+                                // Posición Y: cerca del borde inferior
                                 $y = $h - 30;
-                                $text = "Página {PAGE_NUM} de {PAGE_COUNT}";
 
-                                // Calcular ancho del texto para centrarlo
-                                $textWidth = $fontMetrics->getTextWidth($text, $font, $size);
-                                $x = ($w - $textWidth) / 2;
-
-                                // Dibujar el texto
-                                $pdf->text($x, $y, $text, $font, $size, $color);
+                                // page_text() usa {PAGE_NUM} y {PAGE_COUNT} que se reemplazan automáticamente
+                                $pdf->page_text($w / 2, $y, "Página {PAGE_NUM} de {PAGE_COUNT}", $font, $size, $color, 0, 0, "center");
                             }
                         </script>
                     </div>
